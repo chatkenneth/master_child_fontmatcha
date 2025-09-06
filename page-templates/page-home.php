@@ -68,13 +68,11 @@
                                            # Loop
                                            if ( $all_websites_query->have_posts() ) : ?>
                                            
-                                                <?php echo get_bloginfo('name');; ?>
                                            
                                                <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
                                                    <div class="col-12 col-lg-12">
                                                         <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
 
-                                                        <pre><?php var_dump($acf_all_entries); ?></pre>
 
                                                         <?php if($acf_all_entries): ?>
                                                            <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
