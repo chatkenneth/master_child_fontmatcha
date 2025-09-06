@@ -36,7 +36,7 @@
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-                                           
+                                           <?php echo $main_blog; ?>
 
                                            <?php
                                            # For Pagination (Optional)
@@ -50,15 +50,7 @@
                                                'order'   => 'DESC',  # Newest
                                                'orderby' => 'date',  # 'rand' 'post__in'
                                                'paged'  => $paged,  # For Pagination
-                                               #'post_status' => array( 'publish', 'pending', 'draft', 'future' ),
-                                             #'p'      => 313,     # For Specific ID
-                                               #'offset' => 0,        # Start from , remove posts_per_page
-                                             #'ignore_sticky_posts' => 1,
-                                             #'post__in'  => array(1), # ignore_sticky_posts should be enabled
-                                             #'post__not_in'  => array(get_the_id()), # Exclude
-                                             #'category__in' => (( is_category() ) ? array(get_queried_object_id()) : ''),
-                                             #'category__not_in' => array(2),
-                                             #'tag__in' => (( is_tag() ) ? array(get_queried_object_id()) : ''),
+
                                            );
                                            
                                            # Connect Loop to Parameter
