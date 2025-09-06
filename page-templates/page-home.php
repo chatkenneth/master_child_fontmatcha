@@ -36,7 +36,6 @@
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-                                           <?php echo $main_blog; ?>
 
                                  
 
