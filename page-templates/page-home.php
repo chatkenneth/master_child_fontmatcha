@@ -38,6 +38,8 @@
                                         
                                            <?php echo $main_blog; ?>
 
+                                 
+
                                            <?php
                                            # For Pagination (Optional)
                                            # Set the "paged" parameter (use 'page' if the query is on a static front page)
@@ -66,6 +68,7 @@
                                            # Loop
                                            if ( $all_websites_query->have_posts() ) : ?>
                                            
+                                                <?php echo get_bloginfo('name');; ?>
                                            
                                                <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
                                                    <div class="col-12 col-lg-12">
