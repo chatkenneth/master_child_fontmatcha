@@ -68,10 +68,8 @@
                                            
                                                <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
                                                    <div class="col-12 col-lg-12">
-
-                                                        <pre><?php var_dump( $all_websites_query->the_post()); ?></pre>
                                                         <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
-
+                                                        
                                                         <?php $acf_all_domain_name = get_field('website_data_domain_name', get_the_ID()); ?>
                                                         <?php echo $acf_all_domain_name; ?>
 
