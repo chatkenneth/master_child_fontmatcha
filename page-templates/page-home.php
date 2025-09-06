@@ -71,7 +71,14 @@
                                                         <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
                                                         <?php $acf_all_domain_name = get_field('website_data_domain_name', get_the_ID()); ?>
                                                         <?php echo $acf_all_domain_name; ?>
-                                                        
+
+                                                        <?php if( have_rows('all_entries') ): ?>
+                                                            <?php while( have_rows('all_entries') ): the_row(); ?>
+                                                                <?php $sub_value = get_sub_field('image_url'); ?>
+                                                                <?php echo $sub_value; ?>
+                                                            <?php endwhile; ?>
+                                                        <?php endif; ?>
+
                                                         <?php if($acf_all_entries): ?>
                                                            <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
                                                                 <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
