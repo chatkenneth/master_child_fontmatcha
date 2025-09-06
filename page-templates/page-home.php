@@ -42,15 +42,13 @@
                                            <?php
                                            # For Pagination (Optional)
                                            # Set the "paged" parameter (use 'page' if the query is on a static front page)
-                                           $paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
                                            
                                            # Parameter
                                            $all_websites_args = array (
                                                'post_type' => array( 'all_websites', ),
-                                               'posts_per_page'  => get_option('posts_per_page'),  # -1 for all
+                                               'posts_per_page'  => 5,  # -1 for all
                                                'order'   => 'DESC',  # Newest
                                                'orderby' => 'date',  # 'rand' 'post__in'
-                                               'paged'  => $paged,  # For Pagination
 
                                            );
                                            
