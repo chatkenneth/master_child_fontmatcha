@@ -29,141 +29,90 @@
                                 </div>
                                 <div class="col-12 col-lg-12">
                                     <div class="row align-items-center gy-5">
-                                        <?php
-                                        /**
-                                         * List "all_websites" posts and render ACF repeater "all_entries"
-                                         * (sub field: "image_url"), grouped per post with Fancybox.
-                                         * - Works in Multisite via switch_to_blog()
-                                         * - Uses proper ACF repeater API (have_rows / the_row / get_sub_field)
-                                         * - Uses safe escaping and robust $paged handling
-                                         */
 
-                                        global $switched;
+                                        <?php global $switched; ?>
+                                        <?php $current_blog = get_current_blog_id(); ?>
+                                        <?php $main_blog = 1; ?>
+                                        
+                                        <?php switch_to_blog($main_blog); ?>
+                                        
 
-                                        // --- Multisite: switch to the main blog (adjust if needed)
-                                        $main_blog_id = 1;
-                                        switch_to_blog( $main_blog_id );
+                                 
 
-                                        // --- Pagination: supports normal archives and static front page
-                                        $paged = max(
-                                          1,
-                                          (int) get_query_var('paged'),
-                                          (int) get_query_var('page')
-                                        );
+                                           <?php
+                                           # For Pagination (Optional)
+                                           # Set the "paged" parameter (use 'page' if the query is on a static front page)
+                                           
+                                           # Parameter
+                                           $all_websites_args = array (
+                                               'post_type' => array( 'all_websites', ),
+                                               'posts_per_page'  => 5,  # -1 for all
+                                               'order'   => 'DESC',  # Newest
+                                               'orderby' => 'date',  # 'rand' 'post__in'
 
-                                        // --- Query args
-                                        $all_websites_args = array(
-                                          'post_type'      => array( 'all_websites' ),
-                                          'posts_per_page' => 5,       // set to -1 for all
-                                          'order'          => 'DESC',  // newest first
-                                          'orderby'        => 'date',
-                                          'paged'          => $paged,
-                                        );
+                                           );
+                                           
+                                           # Connect Loop to Parameter
+                                           $all_websites_query = new WP_Query( $all_websites_args );
+                                           
+                                           # For Pagination Issue (Optional)
+                                           $temp_query = $wp_query;
+                                           $wp_query   = NULL;
+                                           $wp_query   = $all_websites_query;
+                                           ?>
+                                           
+                                           <?php
+                                           # Loop
+                                           if ( $all_websites_query->have_posts() ) : ?>
+                                           
+                                           
+                                               <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
+                                                   <div class="col-12 col-lg-12">
+                                                        <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
+                                                        
+                                                        <?php $acf_all_domain_name = get_field('website_data_domain_name', get_the_ID()); ?>
+                                                        <?php echo $acf_all_domain_name; ?>
 
-                                        // --- Run custom query
-                                        $all_websites_query = new WP_Query( $all_websites_args );
-                                        ?>
+                                                        <?php if( have_rows('all_entries') ): ?>
+                                                            <?php while( have_rows('all_entries') ): the_row(); ?>
+                                                                <?php $sub_value = get_sub_field('image_url'); ?>
+                                                                <?php echo $sub_value; ?>
+                                                            <?php endwhile; ?>
+                                                        <?php endif; ?>
 
-                                        <?php if ( $all_websites_query->have_posts() ) : ?>
-                                          <div class="row">
-                                            <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
-                                              <div class="col-12 col-lg-12 mb-4">
-                                                <?php
-                                                // Use ACF repeater API — safer and more reliable than get_field() for repeaters
-                                                $gallery_id = 'image-' . get_the_ID();
-                                                $item_index = 0;
+                                                        <?php if($acf_all_entries): ?>
+                                                           <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
+                                                                <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
+                                                                <?php  $gallery_ids = "image-" . get_permalink(); ?>
 
-                                                if ( have_rows( 'all_entries', get_the_ID() ) ) :
-                                                  while ( have_rows( 'all_entries', get_the_ID() ) ) : the_row();
+                                                                <?php if($all_items_ctr == 0): ?>
+                                                                     <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
+                                                                  <?php else: ?>  
 
-                                                    // Sub field "image_url" can return URL or Array depending on ACF "Return Format"
-                                                    $image_val = get_sub_field( 'image_url' );
-                                                    $image_url = '';
+                                                                    <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="d-none"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
+                                                                  <?php endif; ?>  
 
-                                                    if ( is_array( $image_val ) ) {
-                                                      // Image field -> Array: expect 'url'
-                                                      $image_url = isset( $image_val['url'] ) ? $image_val['url'] : '';
-                                                    } else {
-                                                      // Image field -> URL OR plain text
-                                                      $image_url = (string) $image_val;
-                                                    }
+                                                           <?php endforeach; ?>
+                                                        <?php endif; ?>
 
-                                                    if ( ! $image_url ) {
-                                                      // If subfield is an image ID, resolve it:
-                                                      if ( is_numeric( $image_val ) ) {
-                                                        $resolved = wp_get_attachment_image_url( (int) $image_val, 'full' );
-                                                        if ( $resolved ) {
-                                                          $image_url = $resolved;
-                                                        }
-                                                      }
-                                                    }
+                                                        <h2><?php the_title(); ?></h2>
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
+                                                   </div>
+                                               <?php endwhile; ?>
+                                           
+                                             <?php # Template Part | Pagination
+                                             get_template_part('template-parts/content-archive-pagination'); ?>
+                                           
+                                           <?php else : ?>
+                                              <?php # Template Part | No Post Data
+                                              get_template_part('template-parts/content-none'); ?>
+                                           <?php endif; ?>
+                                           
+                                           <?php wp_reset_query(); ?>
+                                        
+                                        <?php restore_current_blog();?>
 
-                                                    // Build Fancybox anchors: first visible, rest hidden (d-none)
-                                                    $is_first = ( $item_index === 0 );
-                                                    $classes  = $is_first
-                                                      ? 'ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy'
-                                                      : 'd-none';
-                                                    ?>
-                                                    <a
-                                                      href="javascript:void(0)"
-                                                      data-fancybox="<?php echo esc_attr( $gallery_id ); ?>"
-                                                      class="<?php echo esc_attr( $classes ); ?>"
-                                                      data-src="<?php echo esc_url( $image_url ); ?>"
-                                                      data-height="1080"
-                                                      data-bg="<?php echo esc_url( $image_url ); ?>">
-                                                    </a>
-                                                    <?php
-                                                    $item_index++;
-                                                  endwhile;
-                                                endif;
-                                                ?>
-
-                                                <h2 class="h4 mt-3"><?php the_title(); ?></h2>
-                                                <p>
-                                                  <?php
-                                                  // Replace with your real excerpt/content
-                                                  echo esc_html__(
-                                                    'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-                                                    'your-text-domain'
-                                                  );
-                                                  ?>
-                                                </p>
-                                              </div>
-                                            <?php endwhile; ?>
-                                          </div>
-
-                                          <?php
-                                          // --- Pagination (basic example). Replace with your template part if preferred.
-                                          $big = 999999999; // need an unlikely integer
-                                          $links = paginate_links( array(
-                                            'base'      => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
-                                            'format'    => '?paged=%#%',
-                                            'current'   => max( 1, $paged ),
-                                            'total'     => $all_websites_query->max_num_pages,
-                                            'type'      => 'list',
-                                            'prev_text' => '&laquo;',
-                                            'next_text' => '&raquo;',
-                                          ) );
-
-                                          if ( $links ) :
-                                            echo '<nav class="pagination-wrapper">' . $links . '</nav>';
-                                          endif;
-                                          ?>
-
-                                        <?php else : ?>
-                                          <?php
-                                          // No posts template — swap for your theme partial if desired
-                                          echo '<p>' . esc_html__( 'No entries found.', 'your-text-domain' ) . '</p>';
-                                          ?>
-                                        <?php endif; ?>
-
-                                        <?php
-                                        // --- Reset globals from custom query
-                                        wp_reset_postdata();
-
-                                        // --- Always restore blog after switch_to_blog()
-                                        restore_current_blog();
-                                        ?>
+                                        
                                     </div>
                                 </div>
                             </div>
