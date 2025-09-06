@@ -29,12 +29,87 @@
                                 </div>
                                 <div class="col-12 col-lg-12">
                                     <div class="row align-items-center gy-5">
-                                        <?php for ($ctr_item  = 1; $ctr_item  <= 10; $ctr_item++): ?>
-                                           <div class="col-12 col-lg-12">
-                                               <div class="ratio ratio-16x9 general-image"></div>
-                                               <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
-                                           </div>
-                                        <?php endfor; ?>
+
+                                        <?php global $switched; ?>
+                                        <?php $current_blog = get_current_blog_id(); ?>
+                                        <?php $main_blog = 1; ?>
+                                        
+                                        <?php switch_to_blog($main_blog); ?>
+                                        
+                                           
+
+                                           <?php
+                                           # For Pagination (Optional)
+                                           # Set the "paged" parameter (use 'page' if the query is on a static front page)
+                                           $paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
+                                           
+                                           # Parameter
+                                           $all_websites_args = array (
+                                               'post_type' => array( 'all_websites', ),
+                                               'posts_per_page'  => get_option('posts_per_page'),  # -1 for all
+                                               'order'   => 'DESC',  # Newest
+                                               'orderby' => 'date',  # 'rand' 'post__in'
+                                               'paged'  => $paged,  # For Pagination
+                                               #'post_status' => array( 'publish', 'pending', 'draft', 'future' ),
+                                             #'p'      => 313,     # For Specific ID
+                                               #'offset' => 0,        # Start from , remove posts_per_page
+                                             #'ignore_sticky_posts' => 1,
+                                             #'post__in'  => array(1), # ignore_sticky_posts should be enabled
+                                             #'post__not_in'  => array(get_the_id()), # Exclude
+                                             #'category__in' => (( is_category() ) ? array(get_queried_object_id()) : ''),
+                                             #'category__not_in' => array(2),
+                                             #'tag__in' => (( is_tag() ) ? array(get_queried_object_id()) : ''),
+                                           );
+                                           
+                                           # Connect Loop to Parameter
+                                           $all_websites_query = new WP_Query( $all_websites_args );
+                                           
+                                           # For Pagination Issue (Optional)
+                                           $temp_query = $wp_query;
+                                           $wp_query   = NULL;
+                                           $wp_query   = $all_websites_query;
+                                           ?>
+                                           
+                                           <?php
+                                           # Loop
+                                           if ( $all_websites_query->have_posts() ) : ?>
+                                           
+                                           
+                                               <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
+                                                   <div class="col-12 col-lg-12">
+                                                        <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
+
+                                                        <?php if($acf_all_entries): ?>
+                                                           <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
+                                                                <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
+                                                                <?php  $gallery_ids = "image-" . get_permalink(); ?>
+
+                                                                <?php if($all_items_ctr == 0): ?>
+                                                                     <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
+                                                                  <?php else: ?>  
+
+                                                                    <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="d-none"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
+                                                                  <?php endif; ?>  
+
+                                                           <?php endforeach; ?>
+                                                        <?php endif; ?>
+
+                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
+                                                   </div>
+                                               <?php endwhile; ?>
+                                           
+                                             <?php # Template Part | Pagination
+                                             get_template_part('template-parts/content-archive-pagination'); ?>
+                                           
+                                           <?php else : ?>
+                                              <?php # Template Part | No Post Data
+                                              get_template_part('template-parts/content-none'); ?>
+                                           <?php endif; ?>
+                                           
+                                           <?php wp_reset_query(); ?>
+                                        
+                                        <?php restore_current_blog();?>
+
                                         
                                     </div>
                                 </div>
