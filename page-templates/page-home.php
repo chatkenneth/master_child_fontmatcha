@@ -36,80 +36,42 @@
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-
-                                 
-
-                                           <?php
-                                           # For Pagination (Optional)
-                                           # Set the "paged" parameter (use 'page' if the query is on a static front page)
-                                           
-                                           # Parameter
-                                           $all_websites_args = array (
-                                               'post_type' => array( 'all_websites', ),
-                                               'posts_per_page'  => 5,  # -1 for all
-                                               'order'   => 'DESC',  # Newest
-                                               'orderby' => 'date',  # 'rand' 'post__in'
-
-                                           );
-                                           
-                                           # Connect Loop to Parameter
-                                           $all_websites_query = new WP_Query( $all_websites_args );
-                                           
-                                           # For Pagination Issue (Optional)
-                                           $temp_query = $wp_query;
-                                           $wp_query   = NULL;
-                                           $wp_query   = $all_websites_query;
-                                           ?>
-                                           
-                                           <?php
-                                           # Loop
-                                           if ( $all_websites_query->have_posts() ) : ?>
-                                           
-                                           
-                                               <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
-                                                   <div class="col-12 col-lg-12">
-                                                        <?php $acf_all_entries = get_field('all_entries', get_the_ID()); ?>
-                                                        
-                                                        <?php $acf_all_domain_name = get_field('website_data_domain_name', get_the_ID()); ?>
-                                                        <?php echo $acf_all_domain_name; ?>
-
-                                                        <?php if( have_rows('all_entries') ): ?>
-                                                            <?php while( have_rows('all_entries') ): the_row(); ?>
-                                                                <?php $sub_value = get_sub_field('image_url'); ?>
-                                                                <?php echo $sub_value; ?>
-                                                            <?php endwhile; ?>
-                                                        <?php endif; ?>
-
-                                                        <?php if($acf_all_entries): ?>
-                                                           <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
-                                                                <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
-                                                                <?php  $gallery_ids = "image-" . get_permalink(); ?>
-
-                                                                <?php if($all_items_ctr == 0): ?>
-                                                                     <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
-                                                                  <?php else: ?>  
-
-                                                                    <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="d-none"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
-                                                                  <?php endif; ?>  
-
-                                                           <?php endforeach; ?>
-                                                        <?php endif; ?>
-
-                                                        <h2><?php the_title(); ?></h2>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
-                                                   </div>
-                                               <?php endwhile; ?>
-                                           
-                                             <?php # Template Part | Pagination
-                                             get_template_part('template-parts/content-archive-pagination'); ?>
-                                           
-                                           <?php else : ?>
-                                              <?php # Template Part | No Post Data
-                                              get_template_part('template-parts/content-none'); ?>
-                                           <?php endif; ?>
-                                           
-                                           <?php wp_reset_query(); ?>
-                                        
+                                          <?php $post_args  = array(
+                                             'post_type' =>  array('all_websites',) ,
+                                             'numberposts' => 5,
+                                             // 'post__not_in' => array(get_the_ID()),
+                                             // 'post__in' => array( 2, 5, 12, 14, 20 ),
+                                             // 'category__in' => array(1),
+                                             // 'category__not_in' => array(2),
+                                             // 'orderby' => post__in,
+                                             // 'post_status' => array('trash','publish','draft'),
+                                             // 'fields'    => 'ids',
+                                             // 'tax_query' => array(
+                                             //  array(
+                                             //    'taxonomy' => 'episodes',
+                                             //    'field' => 'id',
+                                             //    'terms' => 24,
+                                             //    'include_children' => false,
+                                             //  )),
+                                          ); ?>
+                                          
+                                          <?php # https://developer.wordpress.org/reference/functions/get_posts/ ?>
+                                          <?php $post_array = get_posts($post_args); ?>
+                                          
+                                          <?php // $post_data_id = $post_array[0]->ID; ?>
+                                          <?php // $post_data_title = $post_array[0]->post_title; ?>
+                                          <?php // $post_data_content = $post_array[0]->post_content; ?>
+                                          
+                                          <ul>
+                                          <?php foreach($post_array as $item): ?>
+                                             <li>
+                                                <?php $acf_all_entries = get_field('all_entries', $item->ID); ?>
+                                                <pre><?php var_dump($acf_all_entries); ?></pre>
+                                             </li>
+                                          <?php endforeach; ?>
+                                          </ul>
+                                          
+    
                                         <?php restore_current_blog();?>
 
                                         
