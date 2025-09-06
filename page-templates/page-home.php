@@ -143,7 +143,7 @@
                        </div>
                        <div class="col-auto">
                            
-                           <a href="javascript:void(0)"  >
+                           <a href="javascript:void(0)"  data-remodal-action="close" >
                               <i class="fa-regular fa-fw fa-xmark fa-2x"></i>
                            </a>
                            
