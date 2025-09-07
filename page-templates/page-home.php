@@ -29,88 +29,92 @@
                                 </div>
                                 <div class="col-12 col-lg-12">
                                     <div class="row align-items-center gy-5">
+                                        <?php
+                                        global $switched, $wp_query;
 
-                                        <?php global $switched; ?>
-                                        <?php $current_blog = get_current_blog_id(); ?>
-                                        <?php $main_blog = 1; ?>
-                                        
-                                        <?php switch_to_blog($main_blog); ?>
-                                        
+                                        // 0) Which blog to read posts from:
+                                        $main_blog = 1;
 
-                                 
+                                        // 1) Figure out the current page number (works on normal archives AND static front pages)
+                                        $paged = max(
+                                            1,
+                                            (int) get_query_var('paged'),
+                                            (int) get_query_var('page')
+                                        );
 
-                                           <?php
-                                           # For Pagination (Optional)
-                                           # Set the "paged" parameter (use 'page' if the query is on a static front page)
-                                           
-                                           # Parameter
-                                           $all_websites_args = array (
-                                               'post_type' => array( 'all_websites', ),
-                                               'posts_per_page'  => 15,  # -1 for all
-                                               'order'   => 'DESC',  # Newest
-                                               'orderby' => 'modified', // order by last modified date
-                                               'meta_query'     => array(
-                                                       array(
-                                                           'key'     => 'all_entries',   // ACF saves repeater row count here
-                                                           'value'   => 0,
-                                                           'compare' => '>',             // Must have more than 0 rows
-                                                           'type'    => 'NUMERIC'
-                                                       )
-                                                   )
-                                           );
-                                           
-                                           # Connect Loop to Parameter
-                                           $all_websites_query = new WP_Query( $all_websites_args );
-                                           
-                                           # For Pagination Issue (Optional)
-                                           $temp_query = $wp_query;
-                                           $wp_query   = NULL;
-                                           $wp_query   = $all_websites_query;
-                                           ?>
-                                           
-                                           <?php
-                                           # Loop
-                                           if ( $all_websites_query->have_posts() ) : ?>
-                                           
-                                           
-                                               <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
-                                                   <div class="col-12 col-lg-12">
-                                                        <?php $acf_all_entries = get_field('all_entries'); ?>
-                                        
+                                        switch_to_blog( $main_blog );
 
-                                                        <?php if($acf_all_entries): ?>
-                                                           <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
-                                                                <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
-                                                                <?php  $gallery_ids = "image-" . get_permalink(); ?>
+                                        // 2) Build the query and include 'paged'
+                                        $all_websites_args = array(
+                                            'post_type'      => array('all_websites'),
+                                            'posts_per_page' => 15,
+                                            'paged'          => $paged,          // <-- IMPORTANT
+                                            'order'          => 'DESC',
+                                            'orderby'        => 'modified',
+                                            'meta_query'     => array(
+                                                array(
+                                                    'key'     => 'all_entries',
+                                                    'value'   => 0,
+                                                    'compare' => '>',
+                                                    'type'    => 'NUMERIC',
+                                                ),
+                                            ),
+                                        );
 
-                                                                <?php if($all_items_ctr == 0): ?>
-                                                                     <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
-                                                                  <?php else: ?>  
+                                        $all_websites_query = new WP_Query( $all_websites_args );
 
-                                                                    <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="d-none"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
-                                                                  <?php endif; ?>  
+                                        // (Optional) If your pagination template expects the global $wp_query:
+                                        $prev_wp_query = $wp_query;
+                                        $wp_query = $all_websites_query;
+                                        ?>
 
-                                                           <?php endforeach; ?>
-                                                        <?php endif; ?>
+                                        <?php if ( $all_websites_query->have_posts() ) : ?>
+                                          <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
+                                            <div class="col-12 col-lg-12">
+                                              <?php if ( $acf_all_entries = get_field('all_entries') ) : ?>
+                                                <?php foreach ( $acf_all_entries as $all_items_ctr => $each_entry ) :
+                                                  $acf_share_details_video_thumbnail = $each_entry['image_url'];
+                                                  $gallery_ids = 'image-' . get_the_ID(); // safer than get_permalink() for an HTML id
+                                                ?>
+                                                  <?php if ( $all_items_ctr === 0 ) : ?>
+                                                    <a href="javascript:void(0)" data-fancybox="<?php echo esc_attr($gallery_ids); ?>" class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy" data-src="<?php echo esc_url($acf_share_details_video_thumbnail); ?>" data-height="1080" data-bg="<?php echo esc_url($acf_share_details_video_thumbnail); ?>"></a>
+                                                  <?php else : ?>
+                                                    <a href="javascript:void(0)" data-fancybox="<?php echo esc_attr($gallery_ids); ?>" class="d-none" data-src="<?php echo esc_url($acf_share_details_video_thumbnail); ?>" data-height="1080" data-bg="<?php echo esc_url($acf_share_details_video_thumbnail); ?>"></a>
+                                                  <?php endif; ?>
+                                                <?php endforeach; ?>
+                                              <?php endif; ?>
 
-                                                        <h2><?php the_title(); ?></h2>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
-                                                   </div>
-                                               <?php endwhile; ?>
-                                           
-                                             <?php # Template Part | Pagination
-                                             get_template_part('template-parts/content-archive-pagination'); ?>
-                                           
-                                           <?php else : ?>
-                                              <?php # Template Part | No Post Data
-                                              get_template_part('template-parts/content-none'); ?>
-                                           <?php endif; ?>
-                                           
-                                           <?php wp_reset_query(); ?>
-                                        
-                                        <?php restore_current_blog();?>
+                                              <h2><?php the_title(); ?></h2>
+                                              <p>Lorem ipsum…</p>
+                                            </div>
+                                          <?php endwhile; ?>
 
-                                        
+                                          <?php
+                                          // 3) Output pagination BEFORE restoring blog.
+                                          // If you have a template part, keep using it; otherwise, here’s a direct paginate_links() example:
+                                          echo paginate_links( array(
+                                              'total'   => (int) $all_websites_query->max_num_pages,
+                                              'current' => (int) $paged,
+                                              'base'    => trailingslashit( get_pagenum_link(1) ) . '%_%',
+                                              'format'  => 'page/%#%/',
+                                              'prev_text' => '« Prev',
+                                              'next_text' => 'Next »',
+                                          ) );
+
+                                          // Or keep your template part:
+                                          // get_template_part('template-parts/content-archive-pagination');
+                                          ?>
+
+                                        <?php else : ?>
+                                          <?php get_template_part('template-parts/content-none'); ?>
+                                        <?php endif; ?>
+
+                                        <?php
+                                        // 4) Clean up properly
+                                        wp_reset_postdata();
+                                        $wp_query = $prev_wp_query;   // restore global query so other parts of the page behave
+                                        restore_current_blog();
+
                                     </div>
                                 </div>
                             </div>
