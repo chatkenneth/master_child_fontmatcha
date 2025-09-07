@@ -49,7 +49,14 @@
                                                'posts_per_page'  => 5,  # -1 for all
                                                'order'   => 'DESC',  # Newest
                                                'orderby' => 'date',  # 'rand' 'post__in'
-
+                                               'meta_query'     => array(
+                                                       array(
+                                                           'key'     => 'all_entries',   // ACF saves repeater row count here
+                                                           'value'   => 0,
+                                                           'compare' => '>',             // Must have more than 0 rows
+                                                           'type'    => 'NUMERIC'
+                                                       )
+                                                   )
                                            );
                                            
                                            # Connect Loop to Parameter
@@ -69,16 +76,7 @@
                                                <?php while ( $all_websites_query->have_posts() ) : $all_websites_query->the_post(); ?>
                                                    <div class="col-12 col-lg-12">
                                                         <?php $acf_all_entries = get_field('all_entries'); ?>
-                                                        
-                                                        <?php $acf_all_domain_name = get_field('website_data_domain_name'); ?>
-                                                        <?php echo $acf_all_domain_name; ?>
-
-                                                        <?php if( have_rows('all_entries') ): ?>
-                                                            <?php while( have_rows('all_entries') ): the_row(); ?>
-                                                                <?php $sub_value = get_sub_field('image_url'); ?>
-                                                                <?php echo $sub_value; ?>
-                                                            <?php endwhile; ?>
-                                                        <?php endif; ?>
+                                        
 
                                                         <?php if($acf_all_entries): ?>
                                                            <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
