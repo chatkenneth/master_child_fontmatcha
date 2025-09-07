@@ -46,7 +46,7 @@
                                            # Parameter
                                            $all_websites_args = array (
                                                'post_type' => array( 'all_websites', ),
-                                               'posts_per_page'  => 5,  # -1 for all
+                                               'posts_per_page'  => 15,  # -1 for all
                                                'order'   => 'DESC',  # Newest
                                                'orderby' => 'modified', // order by last modified date
                                                'meta_query'     => array(
