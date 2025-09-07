@@ -40,12 +40,13 @@
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-                                  
+                                            
                                  
 
                                            <?php
                                            # For Pagination (Optional)
                                            # Set the "paged" parameter (use 'page' if the query is on a static front page)
+                                           $paged = ( get_query_var( 'page' ) ) ? absint( get_query_var( 'page' ) ) : 1;
                                            
                                            # Parameter
                                            $all_websites_args = array (
@@ -53,6 +54,7 @@
                                                'posts_per_page'  => 15,  # -1 for all
                                                'order'   => 'DESC',  # Newest
                                                'orderby' => 'modified', // order by last modified date
+                                               'paged'  => $paged,  # For Pagination
                                                'meta_query'     => array(
                                                        array(
                                                            'key'     => 'all_entries',   // ACF saves repeater row count here
@@ -111,9 +113,44 @@
                                                         </div>
                                                    </div>
                                                <?php endwhile; ?>
-                                           
-                                             <?php # Template Part | Pagination
-                                             get_template_part('template-parts/content-archive-pagination'); ?>
+                                     
+                                             <?php if(get_the_posts_pagination()): ?>
+                                                <!-- Pagination for Archive -->
+                                                <div  id="container-pagination" class="text-center d-none d-md-block">
+                                                   <?php echo the_posts_pagination(array(
+                                                       'mid_size'  => 3,
+                                                       'prev_text' => __( '', 'textdomain' ),
+                                                       'next_text' => __( '', 'textdomain' ),
+                                                   ) ); ?>
+                                                </div>
+
+                                                <div class="container  d-block d-md-none">
+                                                   <?php  $total_pages = $wp_query->max_num_pages;; ?>
+                                                   <?php  $current_page = max(1, get_query_var('paged'));; ?>
+                                                   <div class="pagination d-block">
+                                                      <div class="row  align-items-center justify-content-between">
+                                                         <div class="col-auto">
+                                                            <?php if(get_previous_posts_link()): ?>
+                                                               <?php previous_posts_link(''); ?>
+                                                            <?php else: ?>
+                                                               <a href="javascript:void(0)" class="opacity-25 prev page-numbers"></a>
+                                                            <?php endif; ?>
+                                                         </div>
+                                                         <div class=" col-auto flex-grow-1 text-center">
+                                                            <?php echo $current_page ."/". $total_pages; ?>
+                                                         </div>
+                                                         <div class="col-auto">
+                                                              <?php if(get_next_posts_link()): ?>
+                                                                 <?php next_posts_link(''); ?>
+                                                              <?php else: ?>
+                                                                 <a href="javascript:void(0)" class="opacity-25 next page-numbers"></a>
+                                                              <?php endif; ?>
+                                                         </div>
+                                                      </div>
+                                                   </div>
+                                                </div>
+                                             <?php endif; ?>
+
                                            
                                            <?php else : ?>
                                               <?php # Template Part | No Post Data
