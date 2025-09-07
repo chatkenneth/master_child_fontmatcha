@@ -24,5 +24,7 @@ function remove_hooks_from_child() {
 add_action( 'wp', 'remove_hooks_from_child');
 
 
+
+
 // include get_theme_file_path( 'inc/functions-cpt.php' );
 include get_theme_root() . '/general-theme-dmd/inc/functions-cpt.php';

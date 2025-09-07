@@ -37,6 +37,8 @@
                                         <?php global $switched; ?>
                                         <?php $current_blog = get_current_blog_id(); ?>
                                         <?php $main_blog = 1; ?>
+
+                                        <?php $blog_url = get_bloginfo('url'); ?>
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
@@ -114,42 +116,30 @@
                                                    </div>
                                                <?php endwhile; ?>
                                      
-                                             <?php if(get_the_posts_pagination()): ?>
-                                                <!-- Pagination for Archive -->
-                                                <div  id="container-pagination" class="text-center d-none d-md-block">
-                                                   <?php echo the_posts_pagination(array(
-                                                       'mid_size'  => 3,
-                                                       'prev_text' => __( '', 'textdomain' ),
-                                                       'next_text' => __( '', 'textdomain' ),
-                                                   ) ); ?>
-                                                </div>
+                                            <?php if(get_the_posts_pagination()): ?>
+                                                 <div class="pagination text-center">
+                                                     <?php
+                                                     $links = paginate_links( array(
+                                                         'base'      => $blog_url . '/%_%',
+                                                         'format'    => 'page/%#%',
+                                                         'current'   => max( 1, get_query_var('paged') ),
+                                                         'total'     => $all_websites_query->max_num_pages,
+                                                         'mid_size'  => 3,
+                                                         'prev_text' => '',   // empty prev text (like your sample)
+                                                         'next_text' => '',   // empty next text (like your sample)
+                                                         'type'      => 'plain', // default, returns <a> and <span> links
+                                                     ) );
 
-                                                <div class="container  d-block d-md-none">
-                                                   <?php  $total_pages = $wp_query->max_num_pages;; ?>
-                                                   <?php  $current_page = max(1, get_query_var('paged'));; ?>
-                                                   <div class="pagination d-block">
-                                                      <div class="row  align-items-center justify-content-between">
-                                                         <div class="col-auto">
-                                                            <?php if(get_previous_posts_link()): ?>
-                                                               <?php previous_posts_link(''); ?>
-                                                            <?php else: ?>
-                                                               <a href="javascript:void(0)" class="opacity-25 prev page-numbers"></a>
-                                                            <?php endif; ?>
-                                                         </div>
-                                                         <div class=" col-auto flex-grow-1 text-center">
-                                                            <?php echo $current_page ."/". $total_pages; ?>
-                                                         </div>
-                                                         <div class="col-auto">
-                                                              <?php if(get_next_posts_link()): ?>
-                                                                 <?php next_posts_link(''); ?>
-                                                              <?php else: ?>
-                                                                 <a href="javascript:void(0)" class="opacity-25 next page-numbers"></a>
-                                                              <?php endif; ?>
-                                                         </div>
-                                                      </div>
-                                                   </div>
-                                                </div>
+                                                     if ( $links ) {
+                                                         echo '<div class="nav-links">';
+                                                         echo $links;
+                                                         echo '</div>';
+                                                     }
+                                                     ?>
+
+                                                 </div>
                                              <?php endif; ?>
+
 
                                            
                                            <?php else : ?>
