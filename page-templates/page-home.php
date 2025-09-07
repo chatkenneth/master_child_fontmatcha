@@ -114,7 +114,7 @@
                                         wp_reset_postdata();
                                         $wp_query = $prev_wp_query;   // restore global query so other parts of the page behave
                                         restore_current_blog();
-
+                                        ?>
                                     </div>
                                 </div>
                             </div>
