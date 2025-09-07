@@ -30,13 +30,23 @@
                                 <div class="col-12 col-lg-12">
                                     <div class="row align-items-center gy-5">
 
+
+                        
+
+
                                         <?php global $switched; ?>
                                         <?php $current_blog = get_current_blog_id(); ?>
                                         <?php $main_blog = 1; ?>
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-
+                                            <?php $term_args  = array('taxonomy' => 'all_websites_components','hide_empty' => false,'parent' => 0 , 'exclude' => array('1'),'fields' => 'ids'); ?>
+                                            <?php # https://developer.wordpress.org/reference/functions/get_terms/ ?>
+                                            <?php # fields options: 'names|ids|all' ?>
+                                            <?php $term_array = get_terms($term_args); ?>
+                                            
+                   
+                                            <pre><?php echo print_r($term_array); ?></pre>
                                  
 
                                            <?php
