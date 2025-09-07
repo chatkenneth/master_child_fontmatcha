@@ -85,6 +85,7 @@
                                                    <div class="col-12 col-lg-12">
                                                         <?php $acf_all_entries = get_field('all_entries'); ?>
                                                         <?php $acf_website_data_url = get_field('website_data_url'); ?>
+                                                        <?php $acf_website_font_description = get_field('font_options_font_description'); ?>
                                         
 
                                                         <?php if($acf_all_entries): ?>
@@ -111,7 +112,7 @@
                                                                     <a href="<?php echo $acf_website_data_url; ?>" target="_blank">Visit Site <i class="fa-regular fa-fw fa-arrow-right-long fa-f178"></i></a>
                                                                 </div>
                                                             </div>
-                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat.</p>
+                                                            <?php echo wpautop($acf_website_font_description); ?>
                                                         </div>
                                                    </div>
                                                <?php endwhile; ?>
