@@ -40,13 +40,7 @@
                                         
                                         <?php switch_to_blog($main_blog); ?>
                                         
-                                            <?php $term_args  = array('taxonomy' => 'all_websites_font_family','hide_empty' => false,'parent' => 0 , 'exclude' => array('1'),'fields' => 'ids'); ?>
-                                            <?php # https://developer.wordpress.org/reference/functions/get_terms/ ?>
-                                            <?php # fields options: 'names|ids|all' ?>
-                                            <?php $term_array = get_terms($term_args); ?>
-                                            
-                   
-                                            <pre><?php echo print_r($term_array); ?></pre>
+                                  
                                  
 
                                            <?php
@@ -167,29 +161,27 @@
                    <div class="col-12 my-auto ">
                       
                        <div class="row gy-2">
-                            <?php for ($ctr_item  = 1; $ctr_item  <= 10; $ctr_item++): ?>
-                                <div class="col-12 col-lg-12">
-                                   <a href="javascript:void(0)" data-remodal-action="close"  class="d-block">
-                                       <?php $image_placeholder = get_stylesheet_directory_uri().'/img/preview-font/font-'.$ctr_item.'.webp'; ?>
-                                       <img src="<?php echo $image_placeholder; ?>" title="800x800" alt="800x800" class="border">
-                                   </a>
-                               </div>
-                            <?php endfor; ?>
+                           
+                           <?php # Template Part | All
+                           get_template_part('template-parts/content-all-fonts'); ?>
+                           
                        </div>
                    </div>
                 </div>
             </div>
          </div>
-         <!-- Bottom Column -->
-         <div class="menu-container-bottom">
-             <div class="container">
-                 <div class="row">
-                     <div class="col-12 col-md-12 text-center">
-                          <?php echo '&copy; ' .  date("Y"); ?>
-                     </div>
-                 </div>
-             </div>
-         </div>
+         <?php if(false): ?>
+            <!-- Bottom Column -->
+            <div class="menu-container-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-12 text-center">
+                             <?php echo '&copy; ' .  date("Y"); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <?php endif; ?>
      </div>
 </div>
 
@@ -220,33 +212,24 @@
             <div class="container h-100">
                 <div class="row h-100">
                    <div class="col-12 my-auto ">
-                       
-                       
-                       <div class="row gy-2">
-                            <?php for ($ctr_item  = 1; $ctr_item  <= 10; $ctr_item++): ?>
-                                <div class="col-12 col-lg-12">
-                                   <a href="javascript:void(0)" data-remodal-action="close"  class="d-block">
-                                       <?php $image_placeholder = get_stylesheet_directory_uri().'/img/preview-font/font-'.$ctr_item.'.webp'; ?>
-                                       <img src="<?php echo $image_placeholder; ?>" title="800x800" alt="800x800" class="border">
-                                   </a>
-                               </div>
-                            <?php endfor; ?>
-                       </div>
-                       
+                       <?php # Template Part | All
+                       get_template_part('template-parts/content-all-fonts'); ?>
                    </div>
                 </div>
             </div>
          </div>
-         <!-- Bottom Column -->
-         <div class="menu-container-bottom">
-             <div class="container">
-                 <div class="row">
-                     <div class="col-12 col-md-12 text-center">
-                          <?php echo '&copy; ' .  date("Y"); ?>
-                     </div>
-                 </div>
-             </div>
-         </div>
+         <?php if(false): ?>
+            <!-- Bottom Column -->
+            <div class="menu-container-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12 col-md-12 text-center">
+                             <?php echo '&copy; ' .  date("Y"); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         <?php endif; ?>
      </div>
 </div>
 
