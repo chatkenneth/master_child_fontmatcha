@@ -48,7 +48,7 @@
                                                'post_type' => array( 'all_websites', ),
                                                'posts_per_page'  => 5,  # -1 for all
                                                'order'   => 'DESC',  # Newest
-                                               'orderby' => 'date',  # 'rand' 'post__in'
+                                               'orderby' => 'modified', // order by last modified date
                                                'meta_query'     => array(
                                                        array(
                                                            'key'     => 'all_entries',   // ACF saves repeater row count here
