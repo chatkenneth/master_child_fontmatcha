@@ -8,7 +8,7 @@
 
 <?php switch_to_blog($main_blog); ?>
 
-   <?php $term_args  = array('taxonomy' => 'all_websites_font_family','hide_empty' => false,'parent' => 0 , 'exclude' => array('1'),'fields' => 'all'); ?>
+   <?php $term_args  = array('taxonomy' => 'all_websites_font_family','hide_empty' => false,'parent' => 0 ,'orderby'    => 'count', 'order'      => 'DESC', 'exclude' => array('1'),'fields' => 'all'); ?>
    <?php # https://developer.wordpress.org/reference/functions/get_terms/ ?>
    <?php # fields options: 'names|ids|all' ?>
    <?php $term_array = get_terms($term_args); ?>
