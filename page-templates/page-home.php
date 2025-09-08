@@ -91,7 +91,7 @@
                                                         <?php if($acf_all_entries): ?>
                                                            <?php foreach($acf_all_entries as $all_items_ctr => $each_entry): ?>
                                                                 <?php  $acf_share_details_video_thumbnail = $each_entry['image_url']; ?>
-                                                                <?php  $gallery_ids = "image-" . get_permalink(); ?>
+                                                                <?php  $gallery_ids = "image-" . get_the_id(); ?>
 
                                                                 <?php if($all_items_ctr == 0): ?>
                                                                      <a href="javascript:void(0)"   data-fancybox="<?php echo $gallery_ids; ?>"  data-height="800"  class="ratio border ratio-16x9 rounded-3 general-image general-image-type-image d-block lazy"  data-src="<?php echo $acf_share_details_video_thumbnail; ?>" data-height="1080"   data-bg="<?php echo $acf_share_details_video_thumbnail; ?>"></a>   
