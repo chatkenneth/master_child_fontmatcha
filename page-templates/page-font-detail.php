@@ -66,6 +66,10 @@
                                    <th>Match Fonts</th>
                                    <td>Content</td>
                                  </tr>
+                                 <tr>
+                                   <th>Where to Download</th>
+                                   <td>Content</td>
+                                 </tr>
                               </table>
                            </div>
                        </div>
