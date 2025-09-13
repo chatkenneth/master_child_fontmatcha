@@ -29,7 +29,7 @@
                            <?php $all_fonts_array = get_terms($all_fonts_args); ?>
                            
                            <?php if($all_fonts_array): ?>
-                              <div class="row">
+                              <div class="row g-2">
 
                                   <?php foreach($all_fonts_array as $ctr => $item): ?>
                                       <?php $active_category_class = (( get_queried_object_id() == $item->term_id ) ? 'active-category' : '') ?>
