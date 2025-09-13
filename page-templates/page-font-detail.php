@@ -46,24 +46,28 @@
                            <div class="table-responsive">
                               <table class="table table-striped border mb-0">
                                  <tr>
-                                   <th>Author</th>
+                                   <th>Designer / Foundry</th>
                                    <td>Google Font</td>
                                  </tr>
                                  
                                  <tr>
-                                   <th>Is Google Font?</th>
+                                   <th>License info</th>
                                    <td>Content</td>
                                  </tr>
                                  <tr>
                                    <th>Alternative Premium Fonts</th>
                                    <td>Content</td>
-                                 </tr>
+                                 </tr> 
                                  <tr>
                                    <th>Alternative Free Fonts</th>
                                    <td>Content</td>
                                  </tr>
                                  <tr>
-                                   <th>Match Fonts</th>
+                                   <th>Best Uses</th>
+                                   <td>Content</td>
+                                 </tr>
+                                 <tr>
+                                   <th>Font Pairing Suggestions</th>
                                    <td>Content</td>
                                  </tr>
                                  <tr>
