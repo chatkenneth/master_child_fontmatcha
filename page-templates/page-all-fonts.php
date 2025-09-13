@@ -36,7 +36,7 @@
                                           <?php $active_category_class = (( get_queried_object_id() == $item->term_id ) ? 'active-category' : '') ?>
                                           <div class="col-12 col-lg-4">
                                               <h2 class="h3">
-                                                  <a href="<?php echo $blog_url ."font/?font=". $item->slug; ?>" class="p-3 border d-block bg-light">
+                                                  <a href="<?php echo $blog_url ."font/?font=". $item->slug; ?>" class="p-3 border d-block bg-white">
                                                     <?php echo $item->name; ?> 
                                                   </a>
                                               </h2>
